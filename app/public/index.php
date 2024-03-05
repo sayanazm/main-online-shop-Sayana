@@ -32,16 +32,9 @@ if ($requestUri === '/registrate') {
 } elseif ($requestUri === '/main') {
     $obj = new MainController();
     if ($requestMethod === "GET") {
-        $obj->getProductsForm();;
-    } else {
-        echo "Метод $requestMethod не поддерживается для $requestUri";
-    }
-} elseif ($requestUri === '/add-product') {
-    $obj = new UserProductController();
-    if ($requestMethod === "GET") {
-        $obj->getAddProductForm();
+        $obj->getProductsForm();
     } elseif ($requestMethod === "POST") {
-        $obj->addProduct($_POST);
+        $obj->addProduct();
     } else {
         echo "Метод $requestMethod не поддерживается для $requestUri";
     }

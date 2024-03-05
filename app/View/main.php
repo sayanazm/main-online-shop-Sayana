@@ -2,25 +2,29 @@
     <link rel="stylesheet" href="style.css">
 </head>
 
-<div>
     <h2>Online Shop Sayana</h2>
 
     <a id='cart-button' class="trigger cart-button-style" href="/cart">CART</a>
 
     <?php
     foreach ($products as $product): ?>
+    <form action="/main" method="post">
     <div id="shop">
         <div class="products">
             <img class="products-img" src="<?php echo $product['image']; ?>">
             <p class="product-name"><?php echo $product['name']; ?> </p>
             <p class="product-description"><?php echo $product['description']; ?></p>
             <p class="product-price"><?php echo $product['price']; ?></p>
-            <a class="add-to-cart" id='test' href="/add-product">ADD TO CART</a>
+            <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?> ">
+            <div class="input-box">
+                <?php echo $errors['quantity'] ?? ''; ?>
+                <input type="text" name="quantity"  placeholder="Quantity">
+            </div>
+            <button class="add-to-cart" id='test'>ADD TO CART</button>
         </div>
     </div>
+    </form>
     <?php endforeach; ?>
-
-</div>
 <style>
     @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
@@ -161,6 +165,23 @@
 
     .add-to-cart:active {
         background: #0e4bf1;
+    }
+    form .input-box input{
+        height: 100%;
+        width: 100%;
+        outline: none;
+        padding: 0 15px;
+        font-size: 17px;
+        font-weight: 400;
+        color: #333;
+        border: 1.5px solid #C7BEBE;
+        border-bottom-width: 2.5px;
+        border-radius: 6px;
+        transition: all 0.3s ease;
+    }
+    .input-box input:focus,
+    .input-box input:valid{
+        border-color: #4070f4;
     }
 
     .slider {
