@@ -5,7 +5,7 @@ use Model\UserProduct;
 use Model\Product;
 
 
-class UserProductController
+class CartController
 {
   
 

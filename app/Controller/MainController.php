@@ -2,14 +2,17 @@
 namespace Controller;
 
 use Model\Product;
+use Model\UserProduct;
 
 class MainController
 {
     private Product $modelProduct;
+    private UserProduct $userProductModel;
 
     public function __construct()
     {
         $this->modelProduct = new Product;
+        $this->userProductModel = new UserProduct;
     }
     public function getProductsForm() :void
     {
@@ -40,9 +43,11 @@ class MainController
 
         if (empty($errors)) {
 
+
             $this->userProductModel->addProduct($userId, $productId, $quantity);
 
             header("Location: /main");
+
         } else {
             
             $products = $this->modelProduct->getAll();
