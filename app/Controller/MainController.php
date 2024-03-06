@@ -2,7 +2,6 @@
 namespace Controller;
 
 use Model\Product;
-require_once './../Model/Product.php';
 
 class MainController
 {

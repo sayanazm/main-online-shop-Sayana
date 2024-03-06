@@ -3,7 +3,7 @@
 namespace Model;
 
 use Model\Model;
-require_once './../Model/Model.php';
+
 class User extends Model
 {
 

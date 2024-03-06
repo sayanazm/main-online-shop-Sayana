@@ -7,9 +7,9 @@ use Controller\UserProductController;
 $requestUri = $_SERVER['REQUEST_URI'];
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-require_once './../Controller/UserController.php';
-require_once './../Controller/MainController.php';
-require_once './../Controller/UserProductController.php';
+require_once './../Autoloader.php';
+
+Autoloader::registrate(dirname(__DIR__));
 
 if ($requestUri === '/registrate') {
     $obj = new UserController();
@@ -34,7 +34,7 @@ if ($requestUri === '/registrate') {
     if ($requestMethod === "GET") {
         $obj->getProductsForm();
     } elseif ($requestMethod === "POST") {
-        $obj->addProduct();
+        $obj->addProduct($_POST);
     } else {
         echo "Метод $requestMethod не поддерживается для $requestUri";
     }
