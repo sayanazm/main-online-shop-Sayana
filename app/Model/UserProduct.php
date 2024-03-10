@@ -21,9 +21,23 @@ class UserProduct extends Model
         return $userProducts;
     }
 
-    public function getOneByProductId()
+    public function getOneByProductId(int $userId, int $productId) :array|bool
     {
+        $stmt = $this->pdo->prepare("SELECT * FROM user_products WHERE user_id=:user_id AND product_id=:product_id");
+        $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
+        return $stmt->fetch();
+    }
 
+    public function updateQuantity(int $userId, int $productId, int $quantity): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE user_products SET quantity = (quantity + :quantity) WHERE user_id = :user_id AND product_id = :product_id");
+        $stmt->execute(['user_id' => $userId, 'product_id' => $productId, 'quantity' => $quantity]);
+    }
+
+    public function minusQuantity(int $userId, int $productId): void
+    {
+        $stmt = $this->pdo->prepare("UPDATE user_products SET quantity = (quantity - 1) WHERE user_id = :user_id AND product_id = :product_id");
+        $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
     }
 
 }

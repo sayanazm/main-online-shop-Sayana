@@ -8,21 +8,24 @@
 
     <?php
     foreach ($products as $product): ?>
-    <form action="/main" method="post">
-    <div id="shop">
+        <form action="/add-product" method="post">
         <div class="products">
             <img class="products-img" src="<?php echo $product['image']; ?>">
             <p class="product-name"><?php echo $product['name']; ?> </p>
             <p class="product-description"><?php echo $product['description']; ?></p>
             <p class="product-price"><?php echo $product['price']; ?></p>
-            <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?> ">
-            <div class="input-box">
-                <?php echo $errors['quantity'] ?? ''; ?>
-                <input type="text" name="quantity"  placeholder="Quantity">
-            </div>
-            <button class="add-to-cart" id='test'>ADD TO CART</button>
+            <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
         </div>
+    <div class="input-box">
+             <?php echo $errors['quantity'] ?? ''; ?>
+        <input type="number" name="quantity"  min="1" max="10">
     </div>
+            <button class="add-to-cart" id='test'>+</button>
+    </form>
+    <form action="/delete-product" method="post">
+        <input type="hidden" name="quantity" value="<?php echo $product['quantity'] ?? '1';?>">
+        <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
+        <button class="add-to-cart" id='test' value="">-</button>
     </form>
     <?php endforeach; ?>
 <style>
@@ -45,17 +48,6 @@
         position: relative;
         font-size: 22px;
         color: #333;
-    }
-
-    h2::before{
-        content: '';
-        position: absolute;
-        left: 605;
-        bottom: 0;
-        height: 3px;
-        width: 28px;
-        border-radius: 12px;
-        background: #4070f4;
     }
 
     .cart-button-style {
@@ -166,7 +158,13 @@
     .add-to-cart:active {
         background: #0e4bf1;
     }
-    form .input-box input{
+
+    .products form .input-box{
+        height: 52px;
+        margin: 18px 0;
+    }
+
+    .input-box input{
         height: 100%;
         width: 100%;
         outline: none;
@@ -183,6 +181,7 @@
     .input-box input:valid{
         border-color: #4070f4;
     }
+
 
     .slider {
         position: fixed;

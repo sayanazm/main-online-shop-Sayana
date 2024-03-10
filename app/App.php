@@ -30,7 +30,7 @@ class App
         '/main' => [
             'GET' => [
                 'class' => MainController::class,
-                'method' => 'getProductsForm',
+                'method' => 'getProducts',
             ]
         ],
         '/logout' => [
@@ -40,19 +40,21 @@ class App
             ]
         ],
         '/add-product' => [
-            'GET' => [
-                'class' => MainController::class,
-                'method' => 'getAddProductForm',
-            ],
             'POST' => [
-                'class' => CartController::class,
+                'class' => MainController::class,
                 'method' => 'addProduct',
+            ]
+        ],
+        '/delete-product' => [
+            'POST' => [
+                'class' => MainController::class,
+                'method' => 'deleteProduct',
             ]
         ],
         '/cart' => [
             'GET' => [
                 'class' => CartController::class,
-                'method' => 'getShoppingCartForm',
+                'method' => 'getCart',
             ],
             'POST' => [
                 'class' => CartController::class,

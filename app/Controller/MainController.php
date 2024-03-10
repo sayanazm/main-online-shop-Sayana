@@ -14,12 +14,13 @@ class MainController
         $this->modelProduct = new Product;
         $this->userProductModel = new UserProduct;
     }
-    public function getProductsForm() :void
+    public function getProducts() :void
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
             header("Location: /login");
         }
+        $userId = $_SESSION['user_id'];
 
         $products = $this->modelProduct->getAll();
 
@@ -35,16 +36,18 @@ class MainController
         }
 
         $userId = $_SESSION['user_id'];
-
         $productId = $array['product_id'];
         $quantity = $array['quantity'];
 
         $errors = $this->validate($productId, $quantity);
 
         if (empty($errors)) {
-
-
-            $this->userProductModel->addProduct($userId, $productId, $quantity);
+            $product = $this->userProductModel->getOneByProductId($userId, $productId);
+            if ($product) {
+                $this->userProductModel->updateQuantity($userId, $productId, $quantity);
+            } else {
+                $this->userProductModel->addProduct($userId, $productId, $quantity);
+            }
 
             header("Location: /main");
 
@@ -66,5 +69,22 @@ class MainController
         }
         return $errors;
     }
+
+    public function deleteProduct($array) :void
+    {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /login");
+        }
+
+        $userId = $_SESSION['user_id'];
+        $productId = $array['product_id'];
+
+        $this->userProductModel->minusQuantity($userId, $productId);
+
+        header("Location: /main");
+    }
+
+
 
 }
