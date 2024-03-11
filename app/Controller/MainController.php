@@ -24,67 +24,19 @@ class MainController
 
         $products = $this->modelProduct->getAll();
 
+        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+        $totalPrice = $this->getTotalPrice($cartProducts);
+
         require_once "./../View/main.php";
 
     }
 
-    public function addProduct($array) :void
+    public function getTotalPrice(array $cartProducts) :float
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /login");
+        $totalPrice = '0';
+        foreach ($cartProducts as $cartProduct) {
+            $totalPrice += ($cartProduct['price'] * $cartProduct['quantity']);
         }
-
-        $userId = $_SESSION['user_id'];
-        $productId = $array['product_id'];
-        $quantity = $array['quantity'];
-
-        $errors = $this->validate($productId, $quantity);
-
-        if (empty($errors)) {
-            $product = $this->userProductModel->getOneByProductId($userId, $productId);
-            if ($product) {
-                $this->userProductModel->updateQuantity($userId, $productId, $quantity);
-            } else {
-                $this->userProductModel->addProduct($userId, $productId, $quantity);
-            }
-
-            header("Location: /main");
-
-        } else {
-            
-            $products = $this->modelProduct->getAll();
-            require_once './../View/main.php';
-        }
+        return $totalPrice;
     }
-
-    private function validate(string $productId, string $quantity): array
-    {
-        $errors = [];
-
-        if ($quantity <= '0') {
-
-            $errors['quantity'] = 'Вы ввели неверное значение, попробуйте снова';
-
-        }
-        return $errors;
-    }
-
-    public function deleteProduct($array) :void
-    {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
-            header("Location: /login");
-        }
-
-        $userId = $_SESSION['user_id'];
-        $productId = $array['product_id'];
-
-        $this->userProductModel->minusQuantity($userId, $productId);
-
-        header("Location: /main");
-    }
-
-
-
 }

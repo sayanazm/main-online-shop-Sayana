@@ -41,13 +41,13 @@ class App
         ],
         '/add-product' => [
             'POST' => [
-                'class' => MainController::class,
+                'class' => CartController::class,
                 'method' => 'addProduct',
             ]
         ],
         '/delete-product' => [
             'POST' => [
-                'class' => MainController::class,
+                'class' => CartController::class,
                 'method' => 'deleteProduct',
             ]
         ],

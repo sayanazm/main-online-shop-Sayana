@@ -18,11 +18,9 @@
         if (empty ($massage)) {
             foreach ($cartProducts as $cartProduct): ?>
                 <tr class="productitm">
-                    <td><img src="<?php echo $cartProduct['image']; ?>" class="thumb"></td>
-                    <td><input type="number" value="<?php echo $cartProduct['quantity']; ?>" min="0" max="99" class="qtyinput"></td>
                     <td><?php echo $cartProduct['name']; ?></td>
+                    <td><input type="number" value="<?php echo $cartProduct['quantity']; ?>" min="0" max="99" class="qtyinput"></td>
                     <td><?php echo '$' . $cartProduct['price']; ?></td>
-                    <td><span type="submit"><img src="https://i.imgur.com/h1ldGRr.png" alt="X"></span></td>
                 </tr>
             <?php endforeach;  } ?>
     </div>

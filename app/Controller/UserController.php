@@ -8,14 +8,17 @@ use Model\User;
 class UserController
 {
     private User $modelUser;
+
     public function __construct()
     {
         $this->modelUser = new User;
     }
+
     public function getLoginForm() :void
     {
         require_once './../View/login.php';
     }
+
     public function login($array) :void
     {
         $errors = $this->validateLogin($array);
@@ -51,11 +54,11 @@ class UserController
         return $errors;
     }
 
-
     public function getRegistrationForm() :void
     {
         require_once "./../View/registrate.php";
     }
+
     public function registrate($array) :void
     {
         $errors = $this->validateRegistration($array);
@@ -114,5 +117,12 @@ class UserController
         return $errors;
     }
 
+    public function logout(): void
+    {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
+        header('Location: /login');
+    }
 
 }

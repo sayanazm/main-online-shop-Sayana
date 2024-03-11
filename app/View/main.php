@@ -4,7 +4,7 @@
 
     <h2>Online Shop Sayana</h2>
 
-    <a id='cart-button' class="trigger cart-button-style" href="/cart">CART</a>
+    <a id='cart-button' class="trigger cart-button-style" href="/cart">CART <?php echo $totalPrice; ?></a>
 
     <?php
     foreach ($products as $product): ?>
@@ -16,14 +16,10 @@
             <p class="product-price"><?php echo $product['price']; ?></p>
             <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
         </div>
-    <div class="input-box">
-             <?php echo $errors['quantity'] ?? ''; ?>
-        <input type="number" name="quantity"  min="1" max="10">
-    </div>
             <button class="add-to-cart" id='test'>+</button>
     </form>
     <form action="/delete-product" method="post">
-        <input type="hidden" name="quantity" value="<?php echo $product['quantity'] ?? '1';?>">
+        <?php echo $errors['quantity'] ?? ''; ?>
         <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
         <button class="add-to-cart" id='test' value="">-</button>
     </form>
