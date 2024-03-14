@@ -5,23 +5,23 @@
     <h2>Online Shop Sayana</h2>
 
     <a id='cart-button' class="trigger cart-button-style" href="/cart"> Cart <?php echo $totalPrice; ?></a>
-    <a id='cart-button' class="trigger cart-button-style" href="/logout">Logout</a>
+    <a id='cart-button' class="logout-button-style" href="/logout">Logout</a>
 
     <?php
     foreach ($products as $product): ?>
         <form name="add-product" action="/add-product" method="post">
         <div class="products">
-            <img class="products-img" src="<?php echo $product['image']; ?>">
-            <p class="product-name"><?php echo $product['name']; ?> </p>
-            <p class="product-description"><?php echo $product['description']; ?></p>
-            <p class="product-price"><?php echo $product['price']; ?></p>
-            <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
+            <img class="products-img" src="<?php echo $product->getImage(); ?>">
+            <p class="product-name"><?php echo $product->getName(); ?> </p>
+            <p class="product-description"><?php echo $product->getDescription(); ?></p>
+            <p class="product-price"><?php echo $product->getPrice(); ?></p>
+            <input type="hidden" name="product_id" value="<?php echo $product->getId();  ?>">
         </div>
             <button class="add-to-cart" id='test'>+</button>
     </form>
     <form name="delete-product" action="/delete-product" method="post">
         <?php echo $errors['quantity'] ?? ''; ?>
-        <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
+        <input type="hidden" name="product_id" value="<?php echo $product->getId();  ?>">
         <button class="add-to-cart" id='test' value="">-</button>
     </form>
     <?php endforeach; ?>
@@ -55,6 +55,21 @@
         width: 10em;
         padding: 1em 1em;
         margin: 0.5em;
+        background: #4070f4;
+        color: white;
+        transition: background .5s;
+        border-radius: 4px;
+        font-weight: bold;
+    }
+
+    .logout-button-style {
+        border-style: none;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 10em;
+        padding: 1em 1em;
+        margin: 5em;
         background: #4070f4;
         color: white;
         transition: background .5s;

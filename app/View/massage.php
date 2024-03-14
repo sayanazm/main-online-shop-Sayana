@@ -1,33 +1,19 @@
+
 <head>
-    <title>Login</title>
+    <title>Success!</title>
     <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
 <div class="wrapper">
     <div class="card">
-        <form action="/login" method="post">
-            <h2>Login Page</h2>
-            <div class="input-box">
-                <?php echo $errors['email'] ?? ''; ?>
-                <input type="email"  name="email" placeholder="Email" >
-            </div>
-            <div class="input-box">
-                <?php echo $errors['password'] ?? ''; ?>
-            <input type="password" name="password"  placeholder="Password">
-            </div>
+            <h2>Заказ успешно создан</h2>
             <div class="input-box button">
-                <input type="Submit" value="Login">
+                <button id="checkout"><a href="/main">Continue Shopping</a></button>
             </div>
-            <div class="text">
-            </div>
-            <div class="text">
-            <h3>Create account?<a href="/registrate"> Create</a></h3>
-            </div>
-        </form>
     </div>
 </div>
 </body>
-<style> @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+<style>@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
     *{
         margin: 0;
         padding: 0;

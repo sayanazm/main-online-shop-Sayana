@@ -28,7 +28,7 @@ class UserController
             $user = $this->modelUser->getUserByEmail($array['email']);
 
             session_start();
-            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_id'] = $user->getId();
 
             header("Location: /main");
         }
@@ -47,7 +47,7 @@ class UserController
 
         if(empty($user)) {
             $errors['email'] = 'Пользователя не существует';
-        } elseif (!password_verify($password, $user['password'])) {
+        } elseif (!password_verify($password, $user->getPassword())) {
             $errors['password'] = "Неверный логин или пароль";
         }
 

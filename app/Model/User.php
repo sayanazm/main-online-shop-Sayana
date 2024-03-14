@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use Entity\UserEntity;
 use Model\Model;
 
 class User extends Model
@@ -12,13 +13,17 @@ class User extends Model
         $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
-    public function getUserByEmail(string $email)
+    public function getUserByEmail(string $email) :UserEntity|null
     {
         $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $statement->execute(['email' => $email]);
         $user = $statement->fetch();
 
-        return $user;
+        if (empty($user)) {
+            return null;
+        }
+
+        return new UserEntity($user['id'], $user['name'], $user['email'], $user['password']);
     }
 
 }

@@ -12,7 +12,7 @@ class Order extends Model
         $stmt->execute(['user_id' => $userId,'email' => $email, 'phone' => $phone, 'name' => $name, 'address' => $address, 'city' => $city, 'country' => $country, 'postal' => $postal]);
     }
 
-    public function getOrderId()
+    public function getOrderId(): false|string
     {
         return $this->pdo->lastInsertId();
     }

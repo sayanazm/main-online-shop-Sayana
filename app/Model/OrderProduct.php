@@ -2,9 +2,9 @@
 
 namespace Model;
 
-class OrderProducts
+class OrderProduct extends Model
 {
-    public function add($userId, $orderId): void
+    public function addFromUserProducts($userId, $orderId): void
     {
         $statement = $this->pdo->prepare("INSERT INTO order_products (order_id, product_id, quantity)
             SELECT :order_id, product_id, quantity

@@ -3,25 +3,33 @@
 namespace Controller;
 
 use Model\Order;
-use Model\OrderProducts;
+use Model\OrderProduct;
 use Model\UserProduct;
 
 class OrderController
 {
     private Order $orderModel;
-    private OrderProducts $orderProductsModel;
+    private OrderProduct $orderProductModel;
+    private UserProduct $userProductModel;
 
-    private UserProduct $userProduct;
 
     public function __construct()
     {
         $this->orderModel = new Order;
-        $this->orderProductsModel = new OrderProducts;
-        $this->userProduct = new UserProduct;
+        $this->orderProductModel = new OrderProduct;
+        $this->userProductModel = new UserProduct;
 
     }
     public function getOrderForm(): void
     {
+        session_start();
+        if (!isset($_SESSION['user_id'])) {
+            header("Location: /login");
+        }
+        $userId = $_SESSION['user_id'];
+        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+        $totalPrice = $this->getTotalPrice($cartProducts);
+
         require_once './../View/order.php';
     }
 
@@ -31,11 +39,13 @@ class OrderController
         if (!isset($_SESSION['user_id'])) {
             header("Location: /login");
         }
+        $userId = $_SESSION['user_id'];
+        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+        $totalPrice = $this->getTotalPrice($cartProducts);
 
-        $errors = $this->validateOrder($array);
+        $errors = $this->validateOrder($array, $userId);
 
         if (empty($errors)) {
-            $userId = $_SESSION['user_id'];
             $email = $array['email'];
             $phone = $array['phone'];
             $name = $array['name'];
@@ -46,18 +56,25 @@ class OrderController
 
             $this->orderModel->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
             $orderId = $this->orderModel->getOrderId();
-            $this->orderProductsModel->add($userId, $orderId);
-            $this->userProduct->deleteAllUserProducts($userId);
+            $this->orderProductModel->addFromUserProducts($userId, $orderId);
+            $this->userProductModel->deleteAllUserProducts($userId);
 
+
+            require_once './../View/massage.php';
         } else {
             require_once './../View/order.php';
         }
 
     }
 
-    private function validateOrder(array $data) :array
+    private function validateOrder(array $data, int $userId) :array
     {
         $errors = [];
+
+        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+        if (empty($cartProducts)) {
+            $errors['cart'] = "Выберите товар для заказа";
+        }
         
         if (!empty($data['name'])) {
             if (strlen($data['name']) < 2) {
@@ -84,6 +101,15 @@ class OrderController
         }
 
         return $errors;
+    }
+
+    public function getTotalPrice(array $cartProducts) :float
+    {
+        $totalPrice = '0';
+        foreach ($cartProducts as $cartProduct) {
+            $totalPrice += ($cartProduct['price'] * $cartProduct['quantity']);
+        }
+        return $totalPrice;
     }
 
 }
