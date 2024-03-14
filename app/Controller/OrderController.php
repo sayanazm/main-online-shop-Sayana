@@ -4,16 +4,20 @@ namespace Controller;
 
 use Model\Order;
 use Model\OrderProducts;
+use Model\UserProduct;
 
 class OrderController
 {
     private Order $orderModel;
     private OrderProducts $orderProductsModel;
 
+    private UserProduct $userProduct;
+
     public function __construct()
     {
         $this->orderModel = new Order;
         $this->orderProductsModel = new OrderProducts;
+        $this->userProduct = new UserProduct;
 
     }
     public function getOrderForm(): void
@@ -43,6 +47,7 @@ class OrderController
             $this->orderModel->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
             $orderId = $this->orderModel->getOrderId();
             $this->orderProductsModel->add($userId, $orderId);
+            $this->userProduct->deleteAllUserProducts($userId);
 
         } else {
             require_once './../View/order.php';

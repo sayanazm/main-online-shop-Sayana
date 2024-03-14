@@ -45,4 +45,10 @@ class UserProduct extends Model
         $stmt = $this->pdo->prepare("DELETE FROM user_products WHERE user_id = :user_id AND product_id = :product_id");
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
     }
+
+    public function deleteAllUserProducts(int $userId) :void
+    {
+        $statement = $this->pdo->prepare('DELETE FROM user_products WHERE user_id = :user_id');
+        $statement->execute(['user_id' => $userId]);
+    }
 }
