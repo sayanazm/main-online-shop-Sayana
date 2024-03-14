@@ -1,9 +1,12 @@
 <?php
 
+namespace Core;
+
 use Controller\CartController;
-use \Controller\MainController;
+use Controller\MainController;
 use Controller\OrderController;
-use \Controller\UserController;
+use Controller\UserController;
+
 class App
 {
     private array $routes = [
@@ -65,11 +68,16 @@ class App
             'GET' => [
                 'class' => OrderController::class,
                 'method' => 'getOrderForm',
+            ],
+            'POST' => [
+                'class' => OrderController::class,
+                'method' => 'order',
             ]
         ]
 
     ];
-    public function run()
+
+    public function run(): void
     {
         $requestUri = $_SERVER['REQUEST_URI'];
 
@@ -85,6 +93,7 @@ class App
 
                 $obj = new $class;
                 $obj->$method($_POST);
+
             } else {
                 echo "Метод $requestMethod не поддерживается для $requestUri";
             }

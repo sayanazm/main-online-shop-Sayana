@@ -4,11 +4,12 @@
 
     <h2>Online Shop Sayana</h2>
 
-    <a id='cart-button' class="trigger cart-button-style" href="/cart">CART <?php echo $totalPrice; ?></a>
+    <a id='cart-button' class="trigger cart-button-style" href="/cart"> Cart <?php echo $totalPrice; ?></a>
+    <a id='cart-button' class="trigger cart-button-style" href="/logout">Logout</a>
 
     <?php
     foreach ($products as $product): ?>
-        <form action="/add-product" method="post">
+        <form name="add-product" action="/add-product" method="post">
         <div class="products">
             <img class="products-img" src="<?php echo $product['image']; ?>">
             <p class="product-name"><?php echo $product['name']; ?> </p>
@@ -18,7 +19,7 @@
         </div>
             <button class="add-to-cart" id='test'>+</button>
     </form>
-    <form action="/delete-product" method="post">
+    <form name="delete-product" action="/delete-product" method="post">
         <?php echo $errors['quantity'] ?? ''; ?>
         <input type="hidden" name="product_id" value="<?php echo $product['id'];  ?>">
         <button class="add-to-cart" id='test' value="">-</button>

@@ -86,6 +86,8 @@ class CartController
             header("Location: /main");
         } else {
             $products = $this->modelProduct->getAll();
+            $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+            $totalPrice = $this->getTotalPrice($cartProducts);
             require_once './../View/main.php';
         }
     }
@@ -96,12 +98,9 @@ class CartController
 
         $product = $this->userProductModel->getOneByProductId($userId, $productId);
 
-        if ($product) {
-            if ($product['quantity'] <= '0') {
+        if ($product === false || $product['quantity'] <= '0') {
 
-                $errors['quantity'] = 'Этого товара уже нет в корзине';
-
-            }
+           $errors['quantity'] = 'Этого товара уже нет в корзине';
         }
         return $errors;
     }
