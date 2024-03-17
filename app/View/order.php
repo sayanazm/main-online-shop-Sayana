@@ -296,9 +296,9 @@
                 <tr>
                     <?php echo $errors['cart'] ?? ''; ?>
                     <?php foreach ($cartProducts as $cartProduct): ?>
-                    <td><?php echo $cartProduct['name'] . ' x ' . $cartProduct['quantity']; ?></td>
+                    <td><?php echo $cartProduct->getName() . ' x ' . $cartProduct->getQuantity(); ?></td>
                 </tr>
-                <td><?php echo '$' . $cartProduct['price']; ?></td>
+                <td><?php echo '$' . $cartProduct->getPrice(); ?></td>
                 <?php endforeach;  ?>
                 <tr>
                     <td>Subtotal</td>

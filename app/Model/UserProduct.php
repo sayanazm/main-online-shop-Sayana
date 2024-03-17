@@ -2,6 +2,7 @@
 
 namespace Model;
 
+use Entity\UserProductEntity;
 use Model\Model;
 
 class UserProduct extends Model
@@ -12,20 +13,39 @@ class UserProduct extends Model
         $stmnt->execute(['user_id' => $userId, 'product_id' => $productId, 'quantity' => $quantity]);
     }
 
-    public function getAllUserProducts(int $userId): array
+    public function getAllUserProducts(int $userId): array|null
     {
-        $stmt = $this->pdo->prepare("SELECT name, price, image, user_products.quantity FROM products JOIN user_products ON products.id = user_products.product_id WHERE user_id =:user_id");
+        $stmt = $this->pdo->prepare("SELECT user_products.id, 
+        user_products.user_id, name, price, image, id, 
+        user_products.quantity FROM products JOIN user_products 
+        ON products.id = user_products.product_id WHERE user_id =:user_id");
         $stmt->execute(['user_id' => $userId]);
         $userProducts = $stmt->fetchAll();
 
-        return $userProducts;
+        if (empty($userProducts)) {
+            return null;
+        }
+
+        $userProductsEntity = [];
+        foreach ($userProducts as $userProduct) {
+            $userProduct = new UserProductEntity($userProduct['id'], $userProduct['user_id'], $userProduct['name'], $userProduct['price'], $userProduct['image'], $userProduct['product_id'], $userProduct['quantity']);
+            $userProductsEntity[] = $userProduct;
+        }
+
+        return $userProductsEntity;
     }
 
-    public function getOneByProductId(int $userId, int $productId) :array|bool
+    public function getOneByProductId(int $userId, int $productId) : UserProductEntity|null
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM user_products WHERE user_id=:user_id AND product_id=:product_id");
+        $stmt = $this->pdo->prepare("SELECT id, user_id, products.name, products.price, products.image, products.id, quantity FROM user_products WHERE user_id=:user_id AND product_id=:product_id");
         $stmt->execute(['user_id' => $userId, 'product_id' => $productId]);
-        return $stmt->fetch();
+        $userProduct = $stmt->fetch();
+
+        if (empty($userProduct)) {
+            return null;
+        }
+
+        return new UserProductEntity($userProduct['id'], $userProduct['user_id'], $userProduct['name'], $userProduct['price'], $userProduct['quantity'], $userProduct['image']);
     }
 
     public function plusQuantity(int $userId, int $productId): void

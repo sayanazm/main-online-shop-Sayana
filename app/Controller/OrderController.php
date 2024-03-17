@@ -107,7 +107,7 @@ class OrderController
     {
         $totalPrice = '0';
         foreach ($cartProducts as $cartProduct) {
-            $totalPrice += ($cartProduct['price'] * $cartProduct['quantity']);
+            $totalPrice += ($cartProduct->getPrice() * $cartProduct->getQuantity());
         }
         return $totalPrice;
     }

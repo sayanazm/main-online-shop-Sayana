@@ -97,7 +97,7 @@ class UserController
             $str = '@';
             $strpos = strpos($email, $str);
 
-            if ($strpos === false) {
+            if (empty($strpos)) {
                 $errors['email'] = 'Email должен содержать @';
             }
 

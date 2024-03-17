@@ -31,11 +31,13 @@ class MainController
 
     }
 
-    public function getTotalPrice(array $cartProducts) :float
+    public function getTotalPrice(array|null $cartProducts) :float
     {
         $totalPrice = '0';
-        foreach ($cartProducts as $cartProduct) {
-            $totalPrice += ($cartProduct['price'] * $cartProduct['quantity']);
+        if ($cartProducts) {
+            foreach ($cartProducts as $cartProduct) {
+                $totalPrice += ($cartProduct->getPrice() * $cartProduct->getQuantity());
+            }
         }
         return $totalPrice;
     }

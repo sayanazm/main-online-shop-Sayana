@@ -36,7 +36,7 @@ class CartController
     {
         $totalPrice = '0';
         foreach ($cartProducts as $cartProduct) {
-            $totalPrice += ($cartProduct['price'] * $cartProduct['quantity']);
+            $totalPrice += ($cartProduct->getPrice() * $cartProduct->getQuantity());
         }
         return $totalPrice;
     }
@@ -79,7 +79,7 @@ class CartController
 
             $product = $this->userProductModel->getOneByProductId($userId, $productId);
             if ($product) {
-                if ($product['quantity'] === 0) {
+                if ($product->getQuantity() === 0) {
                     $this->userProductModel->deleteProduct($userId, $productId);
                 }
             }
@@ -98,7 +98,7 @@ class CartController
 
         $product = $this->userProductModel->getOneByProductId($userId, $productId);
 
-        if ($product === false || $product['quantity'] <= '0') {
+        if ($product === false || $product->getQuantity() <= '0') {
 
            $errors['quantity'] = 'Этого товара уже нет в корзине';
         }
