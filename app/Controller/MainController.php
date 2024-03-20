@@ -3,16 +3,20 @@ namespace Controller;
 
 use Repository\ProductRepository;
 use Repository\UserProductRepository;
+use Service\CartService;
 
 class MainController
 {
     private ProductRepository $productRepository;
     private UserProductRepository $userProductRepository;
 
+    private CartService $cartService;
+
     public function __construct()
     {
         $this->productRepository = new ProductRepository;
         $this->userProductRepository = new UserProductRepository;
+        $this->cartService = new CartService;
     }
     public function getProducts() :void
     {
@@ -24,21 +28,10 @@ class MainController
 
         $products = $this->productRepository->getAll();
 
-        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->getTotalPrice($cartProducts);
+        $totalPrice = $this->cartService->getTotalPrice($userId);
 
         require_once "./../View/main.php";
 
     }
 
-    public function getTotalPrice(array|null $cartProducts) :float
-    {
-        $totalPrice = '0';
-        if ($cartProducts) {
-            foreach ($cartProducts as $cartProduct) {
-                $totalPrice += ($cartProduct->getProduct()->getPrice() * $cartProduct->getQuantity());
-            }
-        }
-        return $totalPrice;
-    }
 }

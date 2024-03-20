@@ -60,17 +60,12 @@ class OrderController
             $address = $orderRequest->getAddress();
             $postal = $orderRequest->getPostal();
 
-            $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
-
-
-            $orderId = $this->orderRepository->getOrderId();
-            $order = $this->orderRepository->getOrderByOrderId($orderId);
+            $order = $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
             header('/order-complete');
         }
 
-        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($cartProducts);
+        $totalPrice = $this->cartService->getTotalPrice($userId);
 
         require_once './../View/order.php';
 

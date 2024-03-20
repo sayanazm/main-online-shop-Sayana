@@ -10,13 +10,13 @@ use Service\CartService;
 class CartController
 {
     private UserProductRepository $userProductRepository;
-    private ProductRepository $modelProduct;
+    private ProductRepository $productRepository;
     private CartService $cartService;
 
     public function __construct()
     {
         $this->userProductRepository = new UserProductRepository();
-        $this->modelProduct = new ProductRepository;
+        $this->productRepository = new ProductRepository;
         $this->cartService = new CartService();
     }
     public function getCart() :void
@@ -27,8 +27,7 @@ class CartController
             header("Location: /login");
         }
 
-        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($cartProducts);
+        $totalPrice = $this->cartService->getTotalPrice($userId);
 
         if (empty($cartProducts)) {
             $massage = 'В корзине пусто';
@@ -45,14 +44,8 @@ class CartController
 
         $userId = $_SESSION['user_id'];
         $productId = $request->getProductId();
-        $quantity = '1';
 
-        $product = $this->userProductRepository->getOneByProductId($userId, $productId);
-        if ($product) {
-            $this->userProductRepository->plusQuantity($userId, $productId);
-        } else {
-            $this->userProductRepository->addProduct($userId, $productId, $quantity);
-        }
+        $this->cartService->addProduct($userId, $productId);
 
         header("Location: /main");
 
@@ -70,19 +63,13 @@ class CartController
         $errors = $request->validate($userId);
 
         if (empty($errors)) {
-            $this->userProductRepository->minusQuantity($userId, $productId);
 
-            $product = $this->userProductRepository->getOneByProductId($userId, $productId);
-            if ($product) {
-                if ($product->getQuantity() === 0) {
-                    $this->userProductRepository->deleteProduct($userId, $productId);
-                }
-            }
+            $this->cartService->deleteProduct($userId, $productId);
             header("Location: /main");
+
         } else {
-            $products = $this->modelProduct->getAll();
-            $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-            $totalPrice = $this->cartService->getTotalPrice($cartProducts);
+            $products = $this->productRepository->getAll();
+            $totalPrice = $this->cartService->getTotalPrice($userId);
             require_once './../View/main.php';
         }
     }
