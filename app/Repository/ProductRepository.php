@@ -1,11 +1,11 @@
 <?php
 
-namespace Model;
+namespace Repository;
 
-use Entity\ProductEntity;
-use Model\Model;
+use Entity\Product;
+use Repository\Repository;
 
-class Product extends Model
+class ProductRepository extends Repository
 {
     public function getAll() :array|null
     {
@@ -18,8 +18,7 @@ class Product extends Model
 
         $productsEntity = [];
         foreach ($products as $product) {
-            $product = new ProductEntity($product['id'], $product['name'], $product['price'], $product['image'], $product['description']);
-            $productsEntity[] = $product;
+            $productsEntity[] = $this->hydrate($product);
         }
 
         return $productsEntity;
@@ -32,6 +31,12 @@ class Product extends Model
         $data = $statement->fetch();
 
         return $data;
+    }
+
+    private function hydrate(array $data): Product
+    {
+        return new Product($data['id'], $data['name'], $data['price'], $data['image'], $data['description']);
+
     }
 
 }

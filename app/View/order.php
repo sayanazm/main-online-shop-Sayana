@@ -295,11 +295,11 @@
                 </tr>
                 <tr>
                     <?php echo $errors['cart'] ?? ''; ?>
-                    <?php foreach ($cartProducts as $cartProduct): ?>
-                    <td><?php echo $cartProduct->getName() . ' x ' . $cartProduct->getQuantity(); ?></td>
+                    <?php if ($cartProducts) { foreach ($cartProducts as $cartProduct): ?>
+                    <td><?php echo $cartProduct->getProduct()->getName() . ' x ' . $cartProduct->getQuantity(); ?></td>
                 </tr>
-                <td><?php echo '$' . $cartProduct->getPrice(); ?></td>
-                <?php endforeach;  ?>
+                <td><?php echo '$' . $cartProduct->getProduct()->getPrice(); ?></td>
+                <?php endforeach; } ?>
                 <tr>
                     <td>Subtotal</td>
                     <td><?php echo '$'. $totalPrice; ?></td>

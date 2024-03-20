@@ -2,16 +2,18 @@
 
 namespace Controller;
 
-use Model\User;
+use Repository\UserRepository;
+use Request\RegistrationRequest;
+use Request\Request;
 
 
 class UserController
 {
-    private User $modelUser;
+    private UserRepository $modelUser;
 
     public function __construct()
     {
-        $this->modelUser = new User;
+        $this->modelUser = new UserRepository;
     }
 
     public function getLoginForm() :void
@@ -19,13 +21,14 @@ class UserController
         require_once './../View/login.php';
     }
 
-    public function login($array) :void
+    public function login(Request $request) :void
     {
-        $errors = $this->validateLogin($array);
+        $errors = $this->validateLogin($request);
 
         if (empty($errors)) {
 
-            $user = $this->modelUser->getUserByEmail($array['email']);
+            $userData = $request->getBody();
+            $user = $this->modelUser->getUserByEmail($userData['email']);
 
             session_start();
             $_SESSION['user_id'] = $user->getId();
@@ -36,12 +39,14 @@ class UserController
         require_once './../View/login.php';
     }
 
-    private function validateLogin(array $array): array
+    private function validateLogin(Request $request): array
     {
         $errors = [];
 
-        $email = $array['email'];
-        $password = $array['password'];
+        $userData = $request->getBody();
+
+        $email = $userData['email'];
+        $password = $userData['password'];
 
         $user = $this->modelUser->getUserByEmail($email);
 
@@ -59,15 +64,15 @@ class UserController
         require_once "./../View/registrate.php";
     }
 
-    public function registrate($array) :void
+    public function registrate(RegistrationRequest $request) :void
     {
-        $errors = $this->validateRegistration($array);
+        $errors = $request->validate();
 
         if (empty($errors)) {
 
-            $password = $array['psw'];
-            $name = $array['name'];
-            $email = $array['email'];
+            $password = $request->getPassword();
+            $name = $request->getName();
+            $email = $request->getEmail();
 
             $password = password_hash($password, PASSWORD_DEFAULT);
 
@@ -77,44 +82,6 @@ class UserController
 
         }
         require_once "./../View/registrate.php";
-    }
-
-    private function validateRegistration(array $data): array
-    {
-        $errors = [];
-
-        $name = $data['name'];
-        if (strlen($name) < 2) {
-            $errors['name'] = "Имя должно быть больше 2 символов";
-        }
-
-        $email = $data['email'];
-        if (strlen($email) < 2) {
-            $errors['email'] = 'Email должен быть больше 2 символов';
-        } elseif (!empty($this->modelUser->getUserByEmail($email))){
-            $errors['email'] = 'Пользователь с таким Email уже существует';
-        } else {
-            $str = '@';
-            $strpos = strpos($email, $str);
-
-            if (empty($strpos)) {
-                $errors['email'] = 'Email должен содержать @';
-            }
-
-        }
-
-        $password = $data['psw'];
-        $password_repeat = $data['psw-repeat'];
-        if (strlen($password) < 2) {
-            $errors['password'] = "Пароль должен быть больше 2 символов";
-        } else {
-
-            if ($password != $password_repeat) {
-                $errors['password'] = "Пароли не совпадают";
-            }
-        }
-
-        return $errors;
     }
 
     public function logout(): void

@@ -1,6 +1,6 @@
 <?php
 
-namespace Controller;
+namespace Controller\Admin;
 
 use Repository\OrderRepository;
 use Repository\OrderProductRepository;
@@ -9,7 +9,7 @@ use Request\OrderRequest;
 use Service\CartService;
 use Service\OrderService;
 
-class OrderController
+class AdminOrderController
 {
     private OrderRepository $orderRepository;
     private OrderProductRepository $orderProductRepository;
@@ -46,7 +46,7 @@ class OrderController
         if (!isset($_SESSION['user_id'])) {
             header("Location: /login");
         }
-        $userId = $_SESSION['user_id'];
+        $userId = $orderRequest->getUserId();
 
         $errors = $orderRequest->validateOrder($userId);
 
@@ -62,18 +62,15 @@ class OrderController
 
             $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
+            $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
+            $totalPrice = $this->cartService->getTotalPrice($cartProducts);
 
             $orderId = $this->orderRepository->getOrderId();
             $order = $this->orderRepository->getOrderByOrderId($orderId);
-
-            header('/order-complete');
+            require_once './../View/order-completed.php';
         }
 
-        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($cartProducts);
-
-        require_once './../View/order.php';
-
     }
+
 
 }

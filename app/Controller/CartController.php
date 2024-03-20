@@ -1,19 +1,23 @@
 <?php
 namespace Controller;
 
-use Model\UserProduct;
-use Model\Product;
+use Repository\UserProductRepository;
+use Repository\ProductRepository;
+use Request\CartRequest;
+use Service\CartService;
 
 
 class CartController
 {
-    private UserProduct $userProductModel;
-    private Product $modelProduct;
+    private UserProductRepository $userProductRepository;
+    private ProductRepository $modelProduct;
+    private CartService $cartService;
 
     public function __construct()
     {
-        $this->userProductModel = new UserProduct();
-        $this->modelProduct = new Product;
+        $this->userProductRepository = new UserProductRepository();
+        $this->modelProduct = new ProductRepository;
+        $this->cartService = new CartService();
     }
     public function getCart() :void
     {
@@ -23,8 +27,8 @@ class CartController
             header("Location: /login");
         }
 
-        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
-        $totalPrice = $this->getTotalPrice($cartProducts);
+        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
+        $totalPrice = $this->cartService->getTotalPrice($cartProducts);
 
         if (empty($cartProducts)) {
             $massage = 'В корзине пусто';
@@ -32,16 +36,7 @@ class CartController
         require_once './../View/cart.php';
     }
 
-    public function getTotalPrice(array $cartProducts) :float
-    {
-        $totalPrice = '0';
-        foreach ($cartProducts as $cartProduct) {
-            $totalPrice += ($cartProduct->getPrice() * $cartProduct->getQuantity());
-        }
-        return $totalPrice;
-    }
-
-    public function addProduct($array) :void
+    public function addProduct(CartRequest $request) :void
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
@@ -49,20 +44,20 @@ class CartController
         }
 
         $userId = $_SESSION['user_id'];
-        $productId = $array['product_id'];
+        $productId = $request->getProductId();
         $quantity = '1';
 
-        $product = $this->userProductModel->getOneByProductId($userId, $productId);
+        $product = $this->userProductRepository->getOneByProductId($userId, $productId);
         if ($product) {
-            $this->userProductModel->plusQuantity($userId, $productId);
+            $this->userProductRepository->plusQuantity($userId, $productId);
         } else {
-            $this->userProductModel->addProduct($userId, $productId, $quantity);
+            $this->userProductRepository->addProduct($userId, $productId, $quantity);
         }
 
         header("Location: /main");
 
     }
-    public function deleteProduct($array) :void
+    public function deleteProduct(CartRequest $request) :void
     {
         session_start();
         if (!isset($_SESSION['user_id'])) {
@@ -70,38 +65,26 @@ class CartController
         }
 
         $userId = $_SESSION['user_id'];
-        $productId = $array['product_id'];
+        $productId = $request->getProductId();
 
-        $errors = $this->validate($userId, $productId);
+        $errors = $request->validate($userId);
 
         if (empty($errors)) {
-            $this->userProductModel->minusQuantity($userId, $productId);
+            $this->userProductRepository->minusQuantity($userId, $productId);
 
-            $product = $this->userProductModel->getOneByProductId($userId, $productId);
+            $product = $this->userProductRepository->getOneByProductId($userId, $productId);
             if ($product) {
                 if ($product->getQuantity() === 0) {
-                    $this->userProductModel->deleteProduct($userId, $productId);
+                    $this->userProductRepository->deleteProduct($userId, $productId);
                 }
             }
             header("Location: /main");
         } else {
             $products = $this->modelProduct->getAll();
-            $cartProducts = $this->userProductModel->getAllUserProducts($userId);
-            $totalPrice = $this->getTotalPrice($cartProducts);
+            $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
+            $totalPrice = $this->cartService->getTotalPrice($cartProducts);
             require_once './../View/main.php';
         }
     }
 
-    private function validate($userId, $productId): array
-    {
-        $errors = [];
-
-        $product = $this->userProductModel->getOneByProductId($userId, $productId);
-
-        if ($product === false || $product->getQuantity() <= '0') {
-
-           $errors['quantity'] = 'Этого товара уже нет в корзине';
-        }
-        return $errors;
-    }
 }

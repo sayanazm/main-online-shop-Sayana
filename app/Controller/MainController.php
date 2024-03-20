@@ -1,18 +1,18 @@
 <?php
 namespace Controller;
 
-use Model\Product;
-use Model\UserProduct;
+use Repository\ProductRepository;
+use Repository\UserProductRepository;
 
 class MainController
 {
-    private Product $modelProduct;
-    private UserProduct $userProductModel;
+    private ProductRepository $productRepository;
+    private UserProductRepository $userProductRepository;
 
     public function __construct()
     {
-        $this->modelProduct = new Product;
-        $this->userProductModel = new UserProduct;
+        $this->productRepository = new ProductRepository;
+        $this->userProductRepository = new UserProductRepository;
     }
     public function getProducts() :void
     {
@@ -22,9 +22,9 @@ class MainController
         }
         $userId = $_SESSION['user_id'];
 
-        $products = $this->modelProduct->getAll();
+        $products = $this->productRepository->getAll();
 
-        $cartProducts = $this->userProductModel->getAllUserProducts($userId);
+        $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
         $totalPrice = $this->getTotalPrice($cartProducts);
 
         require_once "./../View/main.php";
@@ -36,7 +36,7 @@ class MainController
         $totalPrice = '0';
         if ($cartProducts) {
             foreach ($cartProducts as $cartProduct) {
-                $totalPrice += ($cartProduct->getPrice() * $cartProduct->getQuantity());
+                $totalPrice += ($cartProduct->getProduct()->getPrice() * $cartProduct->getQuantity());
             }
         }
         return $totalPrice;

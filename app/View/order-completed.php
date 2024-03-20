@@ -8,6 +8,7 @@
     <div class="card">
             <h2>Заказ успешно создан</h2>
             <div class="input-box button">
+                <?php print_r($order); ?>
                 <button id="checkout"><a href="/main">Continue Shopping</a></button>
             </div>
     </div>

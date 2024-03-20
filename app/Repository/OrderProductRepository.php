@@ -1,8 +1,8 @@
 <?php
 
-namespace Model;
+namespace Repository;
 
-class OrderProduct extends Model
+class OrderProductRepository extends Repository
 {
     public function addFromUserProducts($userId, $orderId): void
     {

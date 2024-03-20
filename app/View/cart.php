@@ -18,9 +18,9 @@
         if (empty ($massage)) {
             foreach ($cartProducts as $cartProduct): ?>
                 <tr class="productitm">
-                    <td><?php echo $cartProduct->getName(); ?></td>
+                    <td><?php echo $cartProduct->getProduct()->getName(); ?></td>
                     <td><input type="number" value="<?php echo $cartProduct->getQuantity(); ?>" min="0" max="99" class="qtyinput"></td>
-                    <td><?php echo '$' . $cartProduct->getPrice(); ?></td>
+                    <td><?php echo '$' . $cartProduct->getProduct()->getPrice(); ?></td>
                 </tr>
             <?php endforeach;  } ?>
     </div>

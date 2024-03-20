@@ -1,11 +1,11 @@
 <?php
 
-namespace Model;
+namespace Repository;
 
-use Entity\UserEntity;
-use Model\Model;
+use Entity\User;
+use Repository\Repository;
 
-class User extends Model
+class UserRepository extends Repository
 {
 
     public function create(string $name, string $email, string $password) :void
@@ -13,7 +13,7 @@ class User extends Model
         $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
-    public function getUserByEmail(string $email) :UserEntity|null
+    public function getUserByEmail(string $email) :User|null
     {
         $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
         $statement->execute(['email' => $email]);
@@ -23,7 +23,11 @@ class User extends Model
             return null;
         }
 
-        return new UserEntity($user['id'], $user['name'], $user['email'], $user['password']);
+        return $this->hydrate($user);
     }
 
+    private function hydrate(array $data): User
+    {
+        return new User($data['id'], $data['name'], $data['email'], $data['password']);
+    }
 }
