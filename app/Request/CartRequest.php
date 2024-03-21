@@ -3,7 +3,6 @@
 namespace Request;
 
 use Repository\UserProductRepository;
-use Request\Request;
 
 class CartRequest extends Request
 {

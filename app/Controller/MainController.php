@@ -3,31 +3,29 @@ namespace Controller;
 
 use Repository\ProductRepository;
 use Repository\UserProductRepository;
+use Service\AuthenticationService;
 use Service\CartService;
 
 class MainController
 {
     private ProductRepository $productRepository;
-    private UserProductRepository $userProductRepository;
-
     private CartService $cartService;
+    private AuthenticationService $authenticationService;
 
     public function __construct()
     {
         $this->productRepository = new ProductRepository;
-        $this->userProductRepository = new UserProductRepository;
         $this->cartService = new CartService;
+        $this->authenticationService = new AuthenticationService();
     }
     public function getProducts() :void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
-        $userId = $_SESSION['user_id'];
 
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $products = $this->productRepository->getAll();
-
         $totalPrice = $this->cartService->getTotalPrice($userId);
 
         require_once "./../View/main.php";

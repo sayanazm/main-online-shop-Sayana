@@ -37,7 +37,7 @@ class CartService
         }
     }
 
-    public function getTotalPrice(int|null $userId) :float
+    public function getTotalPrice(int $userId) :float
     {
         $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
         $totalPrice = '0';

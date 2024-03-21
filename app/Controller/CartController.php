@@ -1,32 +1,31 @@
 <?php
 namespace Controller;
 
-use Repository\UserProductRepository;
 use Repository\ProductRepository;
 use Request\CartRequest;
+use Service\AuthenticationService;
 use Service\CartService;
 
 
 class CartController
 {
-    private UserProductRepository $userProductRepository;
     private ProductRepository $productRepository;
     private CartService $cartService;
+    private AuthenticationService $authenticationService;
 
     public function __construct()
     {
-        $this->userProductRepository = new UserProductRepository();
         $this->productRepository = new ProductRepository;
         $this->cartService = new CartService();
+        $this->authenticationService = new AuthenticationService();
     }
     public function getCart() :void
     {
-        session_start();
-        $userId = $_SESSION['user_id'];
-        if (!isset($userId)) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
 
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $totalPrice = $this->cartService->getTotalPrice($userId);
 
         if (empty($cartProducts)) {
@@ -37,12 +36,11 @@ class CartController
 
     public function addProduct(CartRequest $request) :void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
 
-        $userId = $_SESSION['user_id'];
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $productId = $request->getProductId();
 
         $this->cartService->addProduct($userId, $productId);
@@ -52,12 +50,11 @@ class CartController
     }
     public function deleteProduct(CartRequest $request) :void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
 
-        $userId = $_SESSION['user_id'];
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $productId = $request->getProductId();
 
         $errors = $request->validate($userId);

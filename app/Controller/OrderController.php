@@ -2,51 +2,49 @@
 
 namespace Controller;
 
-use Repository\OrderRepository;
-use Repository\OrderProductRepository;
 use Repository\UserProductRepository;
 use Request\OrderRequest;
+use Service\AuthenticationService;
 use Service\CartService;
 use Service\OrderService;
 
 class OrderController
 {
-    private OrderRepository $orderRepository;
-    private OrderProductRepository $orderProductRepository;
     private UserProductRepository $userProductRepository;
     private OrderService $orderService;
     private CartService $cartService;
+    private  AuthenticationService $authenticationService;
 
 
     public function __construct()
     {
-        $this->orderRepository = new OrderRepository;
-        $this->orderProductRepository = new OrderProductRepository;
         $this->userProductRepository = new UserProductRepository;
         $this->orderService = new OrderService;
         $this->cartService = new CartService;
+        $this->authenticationService = new AuthenticationService();
 
     }
     public function getOrderForm(): void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
-        $userId = $_SESSION['user_id'];
+
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($cartProducts);
+
+        $totalPrice = $this->cartService->getTotalPrice($userId);
 
         require_once './../View/order.php';
     }
 
     public function order(OrderRequest $orderRequest) :void
     {
-        session_start();
-        if (!isset($_SESSION['user_id'])) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
-        $userId = $_SESSION['user_id'];
+
+        $userId = $this->authenticationService->getCurrentUser()->getId();
 
         $errors = $orderRequest->validateOrder($userId);
 
