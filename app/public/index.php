@@ -27,7 +27,7 @@ $app->post('/login', UserController::class, 'login', LoginRequest::class);
 
 $app->get('/main',  MainController::class, 'getProducts');
 
-$app->get('/logout',  AuthenticationService::class, 'logout');
+$app->get('/logout',  UserController::class, 'logout');
 
 $app->post('/add-product', CartController::class, 'addProduct', CartRequest::class);
 $app->post('/delete-product', CartController::class, 'deleteProduct', CartRequest::class);

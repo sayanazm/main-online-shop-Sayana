@@ -38,14 +38,11 @@ class LoginRequest extends Request
         $errors = [];
 
         $email = $this->getEmail();
-        $password = $this->getPassword();
 
         $user = $this->userRepository->getUserByEmail($email);
 
         if(empty($user)) {
             $errors['email'] = 'Пользователя не существует';
-        } elseif (!password_verify($password, $user->getPassword())) {
-            $errors['password'] = "Неверный логин или пароль";
         }
 
         return $errors;

@@ -26,6 +26,7 @@ class CartController
         }
 
         $userId = $this->authenticationService->getCurrentUser()->getId();
+        $cartProducts = $this->cartService->getProducts($userId);
         $totalPrice = $this->cartService->getTotalPrice($userId);
 
         if (empty($cartProducts)) {

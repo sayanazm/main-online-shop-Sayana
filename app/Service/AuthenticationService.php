@@ -32,11 +32,18 @@ class AuthenticationService
         return null;
     }
     
-    public function setId(string $email): void
+    public function login(string $email, string $password): bool
     {
         $user = $this->userRepository->getUserByEmail($email);
+
+        if (!password_verify($password, $user->getPassword())) {
+            return false;
+        }
+
         session_start();
         $_SESSION['user_id'] = $user->getId();
+
+        return true;
     }
 
     public function logout(): void

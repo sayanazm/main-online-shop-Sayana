@@ -31,9 +31,12 @@ class UserController
         if (empty($errors)) {
 
             $email = $request->getEmail();
-            $this->authenticationService->setId($email);
-
-            header("Location: /main");
+            $password = $request->getPassword();
+            if ($this->authenticationService->login($email, $password)) {
+                header("Location: /main");
+            } else {
+                $errors['email'] = 'Неверный логин или пароль';
+            }
         }
 
         require_once './../View/login.php';
@@ -64,4 +67,8 @@ class UserController
         require_once "./../View/registrate.php";
     }
 
+    public function logout(): void
+    {
+        $this->authenticationService->logout();
+    }
 }

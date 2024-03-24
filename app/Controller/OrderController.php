@@ -7,6 +7,7 @@ use Request\OrderRequest;
 use Service\AuthenticationService;
 use Service\CartService;
 use Service\OrderService;
+use Throwable;
 
 class OrderController
 {
@@ -38,6 +39,9 @@ class OrderController
         require_once './../View/order.php';
     }
 
+    /**
+     * @throws Throwable
+     */
     public function order(OrderRequest $orderRequest) :void
     {
         if (!$this->authenticationService->check()) {
@@ -58,7 +62,7 @@ class OrderController
             $address = $orderRequest->getAddress();
             $postal = $orderRequest->getPostal();
 
-            $order = $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
+            $orderedProducts = $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
             header('/order-complete');
         }

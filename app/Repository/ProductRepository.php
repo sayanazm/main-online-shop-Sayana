@@ -28,9 +28,7 @@ class ProductRepository extends Repository
     {
         $statement = $this->pdo->prepare("SELECT * FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
-        $data = $statement->fetch();
-
-        return $data;
+        return $statement->fetch();
     }
 
     private function hydrate(array $data): Product
