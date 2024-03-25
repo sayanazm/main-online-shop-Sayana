@@ -17,4 +17,19 @@ class Repository
         $this->pdo = new PDO("pgsql:host=$host; port=5432; dbname=$dbname", $username, $password);
 
     }
+
+    public function beginTransaction(): void
+    {
+        $this->pdo->beginTransaction();
+    }
+
+    public function commit(): void
+    {
+        $this->pdo->commit();
+    }
+
+    public function rollBack(): void
+    {
+        $this->pdo->rollBack();
+    }
 }

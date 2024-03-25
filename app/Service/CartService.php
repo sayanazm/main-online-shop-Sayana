@@ -2,31 +2,43 @@
 
 namespace Service;
 
+use Entity\User;
 use Repository\UserProductRepository;
 
 class CartService
 {
     private UserProductRepository $userProductRepository;
+    private AuthenticationService $authenticationService;
 
     public function __construct()
     {
         $this->userProductRepository = new UserProductRepository();
+        $this->authenticationService = new AuthenticationService();
     }
 
-    public function addProduct(int $userId, int $productId): void
+    public function addProduct(int $productId): void
     {
-        $quantity = '1';
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user instanceof User) {
+            return;
+        }
+        $userId = $user->getId();
         $product = $this->userProductRepository->getOneByProductId($userId, $productId);
         if ($product) {
             $this->userProductRepository->plusQuantity($userId, $productId);
         } else {
-            $this->userProductRepository->addProduct($userId, $productId, $quantity);
+            $this->userProductRepository->addProduct($userId, $productId, 1);
         }
 
     }
 
-    public function deleteProduct(int $userId, int $productId): void
+    public function deleteProduct(int $productId): void
     {
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user instanceof User) {
+            return;
+        }
+        $userId = $user->getId();
         $this->userProductRepository->minusQuantity($userId, $productId);
 
         $product = $this->userProductRepository->getOneByProductId($userId, $productId);
@@ -37,11 +49,11 @@ class CartService
         }
     }
 
-    public function getTotalPrice(int $userId) :float
+    public function getTotalPrice() :float
     {
         $totalPrice = '0';
-        $cartProducts = $this->getProducts($userId);
-        if ($cartProducts) {
+        $cartProducts = $this->getProducts();
+        if (!empty($cartProducts)) {
             foreach ($cartProducts as $cartProduct) {
                 $totalPrice += ($cartProduct->getProduct()->getPrice() * $cartProduct->getQuantity());
             }
@@ -49,8 +61,12 @@ class CartService
         return $totalPrice;
     }
 
-    public function getProducts($userId): array
+    public function getProducts(): array|null
     {
-        return $this->userProductRepository->getAllUserProducts($userId);
+        $user = $this->authenticationService->getCurrentUser();
+        if (!$user instanceof User) {
+            return null;
+        }
+        return $this->userProductRepository->getAllUserProducts($user->getId());
     }
 }

@@ -35,11 +35,14 @@ class AdminOrderController
         }
         $userId = $_SESSION['user_id'];
         $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($userId);
+        $totalPrice = $this->cartService->getTotalPrice();
 
         require_once './../View/order.php';
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function order(OrderRequest $orderRequest) :void
     {
         session_start();
@@ -62,7 +65,7 @@ class AdminOrderController
 
             $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
-            $totalPrice = $this->cartService->getTotalPrice($userId);
+            $totalPrice = $this->cartService->getTotalPrice();
 
             require_once './../View/order-completed.php';
         }

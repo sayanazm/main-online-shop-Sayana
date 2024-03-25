@@ -26,7 +26,7 @@ class MainController
 
         $userId = $this->authenticationService->getCurrentUser()->getId();
         $products = $this->productRepository->getAll();
-        $totalPrice = $this->cartService->getTotalPrice($userId);
+        $totalPrice = $this->cartService->getTotalPrice();
 
         require_once "./../View/main.php";
 

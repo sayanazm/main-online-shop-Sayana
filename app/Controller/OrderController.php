@@ -34,7 +34,7 @@ class OrderController
         $userId = $this->authenticationService->getCurrentUser()->getId();
         $cartProducts = $this->userProductRepository->getAllUserProducts($userId);
 
-        $totalPrice = $this->cartService->getTotalPrice($userId);
+        $totalPrice = $this->cartService->getTotalPrice();
 
         require_once './../View/order.php';
     }
@@ -67,7 +67,7 @@ class OrderController
             header('/order-complete');
         }
 
-        $totalPrice = $this->cartService->getTotalPrice($userId);
+        $totalPrice = $this->cartService->getTotalPrice();
 
         require_once './../View/order.php';
 

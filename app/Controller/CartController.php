@@ -1,6 +1,7 @@
 <?php
 namespace Controller;
 
+use Entity\User;
 use Repository\ProductRepository;
 use Request\CartRequest;
 use Service\AuthenticationService;
@@ -25,9 +26,8 @@ class CartController
             header("Location: /login");
         }
 
-        $userId = $this->authenticationService->getCurrentUser()->getId();
-        $cartProducts = $this->cartService->getProducts($userId);
-        $totalPrice = $this->cartService->getTotalPrice($userId);
+        $cartProducts = $this->cartService->getProducts();
+        $totalPrice = $this->cartService->getTotalPrice();
 
         if (empty($cartProducts)) {
             $massage = 'В корзине пусто';
@@ -41,10 +41,9 @@ class CartController
             header("Location: /login");
         }
 
-        $userId = $this->authenticationService->getCurrentUser()->getId();
         $productId = $request->getProductId();
 
-        $this->cartService->addProduct($userId, $productId);
+        $this->cartService->addProduct($productId);
 
         header("Location: /main");
 
@@ -62,12 +61,12 @@ class CartController
 
         if (empty($errors)) {
 
-            $this->cartService->deleteProduct($userId, $productId);
+            $this->cartService->deleteProduct($productId);
             header("Location: /main");
 
         } else {
             $products = $this->productRepository->getAll();
-            $totalPrice = $this->cartService->getTotalPrice($userId);
+            $totalPrice = $this->cartService->getTotalPrice();
             require_once './../View/main.php';
         }
     }
