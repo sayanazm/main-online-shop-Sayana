@@ -10,7 +10,6 @@ use Request\CartRequest;
 use Request\LoginRequest;
 use Request\OrderRequest;
 use Request\RegistrationRequest;
-use Service\AuthenticationService;
 
 require_once './../Core/Autoloader.php';
 

@@ -9,7 +9,7 @@ class ProductRepository extends Repository
 {
     public function getAll() :array|null
     {
-        $stmt = $this->pdo->query("SELECT * FROM products");
+        $stmt = self::getPdo()->query("SELECT * FROM products");
         $products = $stmt->fetchALL();
 
         if (empty($products)) {
@@ -26,7 +26,7 @@ class ProductRepository extends Repository
 
     public function getOneById(int $id): array
     {
-        $statement = $this->pdo->prepare("SELECT * FROM products WHERE id = :id");
+        $statement = self::getPdo()->prepare("SELECT * FROM products WHERE id = :id");
         $statement->execute(['id' => $id]);
         return $statement->fetch();
     }

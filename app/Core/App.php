@@ -2,17 +2,7 @@
 
 namespace Core;
 
-use Controller\CartController;
-use Controller\MainController;
-use Controller\OrderController;
-use Controller\Admin\AdminOrderController;
-use Controller\UserController;
-use Request\CartRequest;
-use Request\LoginRequest;
-use Request\OrderRequest;
 use Request\Request;
-use Request\RegistrationRequest;
-use Service\AuthenticationService;
 
 class App
 {

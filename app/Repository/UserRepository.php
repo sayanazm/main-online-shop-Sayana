@@ -10,12 +10,12 @@ class UserRepository extends Repository
 
     public function create(string $name, string $email, string $password) :void
     {
-        $statement = $this->pdo->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
+        $statement = self::getPdo()->prepare("INSERT INTO users (name, email, password) VALUES (:name, :email, :password)");
         $statement->execute(['name' => $name, 'email' => $email, 'password' => $password]);
     }
     public function getUserByEmail(string $email) :User|null
     {
-        $statement = $this->pdo->prepare("SELECT * FROM users WHERE email = :email");
+        $statement = self::getPdo()->prepare("SELECT * FROM users WHERE email = :email");
         $statement->execute(['email' => $email]);
         $user = $statement->fetch();
 
@@ -28,7 +28,7 @@ class UserRepository extends Repository
     
     public function getUserById(int $userId): User|null
     {
-        $statement = $this->pdo->prepare("SELECT * FROM users WHERE id = :id");
+        $statement = self::getPdo()->prepare("SELECT * FROM users WHERE id = :id");
         $statement->execute(['id' => $userId]);
         $user = $statement->fetch();
 

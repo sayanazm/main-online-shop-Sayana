@@ -4,7 +4,7 @@ namespace Controller;
 
 use Repository\UserProductRepository;
 use Request\OrderRequest;
-use Service\AuthenticationService;
+use Service\AuthenticationService\SessionAuthenticationService;
 use Service\CartService;
 use Service\OrderService;
 use Throwable;
@@ -14,7 +14,7 @@ class OrderController
     private UserProductRepository $userProductRepository;
     private OrderService $orderService;
     private CartService $cartService;
-    private  AuthenticationService $authenticationService;
+    private  SessionAuthenticationService $authenticationService;
 
 
     public function __construct()
@@ -22,7 +22,7 @@ class OrderController
         $this->userProductRepository = new UserProductRepository;
         $this->orderService = new OrderService;
         $this->cartService = new CartService;
-        $this->authenticationService = new AuthenticationService();
+        $this->authenticationService = new SessionAuthenticationService();
 
     }
     public function getOrderForm(): void

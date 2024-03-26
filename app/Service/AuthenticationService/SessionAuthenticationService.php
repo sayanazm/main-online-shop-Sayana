@@ -1,11 +1,11 @@
 <?php
 
-namespace Service;
+namespace Service\AuthenticationService;
 
 use Entity\User;
 use Repository\UserRepository;
 
-class AuthenticationService
+class SessionAuthenticationService implements AuthenticationService
 {
     private UserRepository $userRepository;
     
@@ -36,6 +36,9 @@ class AuthenticationService
     {
         $user = $this->userRepository->getUserByEmail($email);
 
+        if (!$user instanceof User) {
+            return false;
+        }
         if (!password_verify($password, $user->getPassword())) {
             return false;
         }
