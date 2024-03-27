@@ -26,7 +26,7 @@ class CartRequest extends Request
 
         $product = $this->userProductRepository->getOneByProductId($userId, $this->getProductId());
 
-        if ($product === false || $product->getQuantity() <= '0') {
+        if ($product === null || $product->getQuantity() <= '0') {
 
             $errors['quantity'] = 'Этого товара уже нет в корзине';
         }

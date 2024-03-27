@@ -3,6 +3,7 @@ namespace Controller;
 
 use Repository\ProductRepository;
 use Request\CartRequest;
+use Service\AuthenticationService\AuthenticationServiceInterface;
 use Service\AuthenticationService\CookieAuthenticationService;
 use Service\AuthenticationService\SessionAuthenticationService;
 use Service\CartService;
@@ -12,19 +13,17 @@ class CartController
 {
     private ProductRepository $productRepository;
     private CartService $cartService;
-    private SessionAuthenticationService $authenticationService;
-    private CookieAuthenticationService $cookieAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService)
     {
         $this->productRepository = new ProductRepository;
-        $this->cartService = new CartService();
-        $this->authenticationService = new SessionAuthenticationService();
-        $this->cookieAuthenticationService = new CookieAuthenticationService();
+        $this->authenticationService = $authenticationService;
+        $this->cartService = $cartService;
     }
     public function getCart() :void
     {
-        if (!$this->cookieAuthenticationService->check()) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
 

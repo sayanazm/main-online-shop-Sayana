@@ -4,6 +4,7 @@ namespace Controller;
 
 use Repository\UserProductRepository;
 use Request\OrderRequest;
+use Service\AuthenticationService\AuthenticationServiceInterface;
 use Service\AuthenticationService\SessionAuthenticationService;
 use Service\CartService;
 use Service\OrderService;
@@ -14,16 +15,15 @@ class OrderController
     private UserProductRepository $userProductRepository;
     private OrderService $orderService;
     private CartService $cartService;
-    private  SessionAuthenticationService $authenticationService;
+    private  AuthenticationServiceInterface $authenticationService;
 
 
-    public function __construct()
+    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService, OrderService $orderService)
     {
+        $this->authenticationService = $authenticationService;
+        $this->cartService = $cartService;
+        $this->orderService = $orderService;
         $this->userProductRepository = new UserProductRepository;
-        $this->orderService = new OrderService;
-        $this->cartService = new CartService;
-        $this->authenticationService = new SessionAuthenticationService();
-
     }
     public function getOrderForm(): void
     {
@@ -62,7 +62,7 @@ class OrderController
             $address = $orderRequest->getAddress();
             $postal = $orderRequest->getPostal();
 
-            $orderedProducts = $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
+            $orderedProducts = $this->orderService->order($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
             header('/order-complete');
         }

@@ -4,25 +4,24 @@ namespace Service;
 
 use Entity\User;
 use Repository\UserProductRepository;
+use Service\AuthenticationService\AuthenticationServiceInterface;
 use Service\AuthenticationService\CookieAuthenticationService;
 use Service\AuthenticationService\SessionAuthenticationService;
 
 class CartService
 {
     private UserProductRepository $userProductRepository;
-    private SessionAuthenticationService $authenticationService;
-    private CookieAuthenticationService $cookieAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
         $this->userProductRepository = new UserProductRepository();
-        $this->authenticationService = new SessionAuthenticationService();
-        $this->cookieAuthenticationService = new CookieAuthenticationService();
+        $this->authenticationService = $authenticationService;
     }
 
     public function addProduct(int $productId): void
     {
-        $user = $this->cookieAuthenticationService->getCurrentUser();
+        $user = $this->authenticationService->getCurrentUser();
         if (!$user instanceof User) {
             return;
         }
@@ -38,7 +37,7 @@ class CartService
 
     public function deleteProduct(int $productId): void
     {
-        $user = $this->cookieAuthenticationService->getCurrentUser();
+        $user = $this->authenticationService->getCurrentUser();
         if (!$user instanceof User) {
             return;
         }
@@ -67,7 +66,7 @@ class CartService
 
     public function getProducts(): array|null
     {
-        $user = $this->cookieAuthenticationService->getCurrentUser();
+        $user = $this->authenticationService->getCurrentUser();
         if (!$user instanceof User) {
             return null;
         }

@@ -5,6 +5,7 @@ namespace Controller;
 use Repository\UserRepository;
 use Request\LoginRequest;
 use Request\RegistrationRequest;
+use Service\AuthenticationService\AuthenticationServiceInterface;
 use Service\AuthenticationService\CookieAuthenticationService;
 use Service\AuthenticationService\SessionAuthenticationService;
 
@@ -12,15 +13,13 @@ use Service\AuthenticationService\SessionAuthenticationService;
 class UserController
 {
     private UserRepository $userRepository;
-    private SessionAuthenticationService $authenticationService;
 
-    private CookieAuthenticationService $cookieAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationServiceInterface $authenticationService)
     {
-        $this->userRepository = new UserRepository;
-        $this->authenticationService = new SessionAuthenticationService();
-        $this->cookieAuthenticationService = new CookieAuthenticationService();
+        $this->authenticationService = $authenticationService;
+        $this->userRepository = new UserRepository();
     }
 
     public function getLoginForm() :void
@@ -36,7 +35,7 @@ class UserController
 
             $email = $request->getEmail();
             $password = $request->getPassword();
-            if ($this->cookieAuthenticationService->login($email, $password)) {
+            if ($this->authenticationService->login($email, $password)) {
                 header("Location: /main");
             } else {
                 $errors['email'] = 'Неверный логин или пароль';
@@ -73,6 +72,7 @@ class UserController
 
     public function logout(): void
     {
-        $this->cookieAuthenticationService->logout();
+        $this->authenticationService->logout();
+        header('Location: /login');
     }
 }

@@ -63,7 +63,7 @@ class AdminOrderController
             $address = $orderRequest->getAddress();
             $postal = $orderRequest->getPostal();
 
-            $this->orderService->create($userId, $email, $phone, $name, $address, $city, $country, $postal);
+            $this->orderService->order($userId, $email, $phone, $name, $address, $city, $country, $postal);
 
             $totalPrice = $this->cartService->getTotalPrice();
 

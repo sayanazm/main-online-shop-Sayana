@@ -3,6 +3,10 @@
 namespace Core;
 
 use Request\Request;
+use Service\AuthenticationService\CookieAuthenticationService;
+use Service\AuthenticationService\SessionAuthenticationService;
+use Service\CartService;
+use Service\OrderService;
 
 class App
 {
@@ -43,7 +47,12 @@ class App
                 $method = $handler['method'];
                 $requestClass = $handler['requestClass'];
 
-                $obj = new $class;
+                $authService = new SessionAuthenticationService();
+                $cartService = new CartService($authService);
+                $orderService = new OrderService();
+
+                $obj = new $class($authService, $cartService, $orderService);
+
                 $request = new $requestClass($method, $requestUri, headers_list(), $_POST);
                 $obj->$method($request);
 

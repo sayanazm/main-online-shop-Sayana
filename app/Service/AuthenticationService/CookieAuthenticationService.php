@@ -5,7 +5,7 @@ namespace Service\AuthenticationService;
 use Entity\User;
 use Repository\UserRepository;
 
-class CookieAuthenticationService implements AuthenticationService
+class CookieAuthenticationService implements AuthenticationServiceInterface
 {
     private UserRepository $userRepository;
 
@@ -55,7 +55,6 @@ class CookieAuthenticationService implements AuthenticationService
             unset($_COOKIE['user_id']);
             setcookie('user_id', "", time()-86400);
         }
-        header('Location: /login');
     }
 
 }

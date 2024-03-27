@@ -28,7 +28,7 @@ class OrderService
     /**
      * @throws Throwable
      */
-    public function create(int $userId, string $email, string $phone, string $name, string $address, string $city, string $country, int $postal): array
+    public function order(int $userId, string $email, string $phone, string $name, string $address, string $city, string $country, int $postal): array
     {
 
         Repository::getPdo()->beginTransaction();
@@ -39,13 +39,13 @@ class OrderService
 
             $orderId = $this->orderRepository->getOrderId();
 
-            $deletedProducts = $this->orderProductRepository->addFromUserProducts($userId, $orderId);
+            $orderedProducts = $this->orderProductRepository->addFromUserProducts($userId, $orderId);
 
             $this->userProductRepository->deleteAllUserProducts($userId);
 
             Repository::getPdo()->commit();
 
-            return $deletedProducts;
+            return $orderedProducts;
 
         } catch (Throwable $exception ) {
             Repository::getPdo()->rollBack();

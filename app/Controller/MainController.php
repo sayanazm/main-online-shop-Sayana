@@ -2,6 +2,7 @@
 namespace Controller;
 
 use Repository\ProductRepository;
+use Service\AuthenticationService\AuthenticationServiceInterface;
 use Service\AuthenticationService\CookieAuthenticationService;
 use Service\AuthenticationService\SessionAuthenticationService;
 use Service\CartService;
@@ -10,23 +11,21 @@ class MainController
 {
     private ProductRepository $productRepository;
     private CartService $cartService;
-    private SessionAuthenticationService $authenticationService;
-    private CookieAuthenticationService $cookieAuthenticationService;
+    private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct()
+    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService)
     {
+        $this->authenticationService = $authenticationService;
+        $this->cartService = $cartService;
         $this->productRepository = new ProductRepository;
-        $this->cartService = new CartService;
-        $this->authenticationService = new SessionAuthenticationService();
-        $this->cookieAuthenticationService = new CookieAuthenticationService();
     }
     public function getProducts() :void
     {
-        if (!$this->cookieAuthenticationService->check()) {
+        if (!$this->authenticationService->check()) {
             header("Location: /login");
         }
 
-        $userId = $this->cookieAuthenticationService->getCurrentUser()->getId();
+        $userId = $this->authenticationService->getCurrentUser()->getId();
         $products = $this->productRepository->getAll();
         $totalPrice = $this->cartService->getTotalPrice();
 

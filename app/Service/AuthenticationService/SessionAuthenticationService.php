@@ -5,7 +5,7 @@ namespace Service\AuthenticationService;
 use Entity\User;
 use Repository\UserRepository;
 
-class SessionAuthenticationService implements AuthenticationService
+class SessionAuthenticationService implements AuthenticationServiceInterface
 {
     private UserRepository $userRepository;
     
@@ -54,7 +54,6 @@ class SessionAuthenticationService implements AuthenticationService
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_destroy();
         }
-        header('Location: /login');
     }
 
 }
