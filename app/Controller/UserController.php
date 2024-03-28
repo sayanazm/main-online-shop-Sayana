@@ -16,10 +16,10 @@ class UserController
 
     private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct(AuthenticationServiceInterface $authenticationService)
+    public function __construct(AuthenticationServiceInterface $authenticationService, UserRepository $userRepository)
     {
         $this->authenticationService = $authenticationService;
-        $this->userRepository = new UserRepository();
+        $this->userRepository = $userRepository;
     }
 
     public function getLoginForm() :void

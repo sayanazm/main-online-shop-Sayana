@@ -2,6 +2,13 @@
 
 namespace Core;
 
+use Controller\CartController;
+use Controller\MainController;
+use Controller\OrderController;
+use Controller\UserController;
+use Repository\ProductRepository;
+use Repository\UserProductRepository;
+use Repository\UserRepository;
 use Request\Request;
 use Service\AuthenticationService\CookieAuthenticationService;
 use Service\AuthenticationService\SessionAuthenticationService;
@@ -47,11 +54,40 @@ class App
                 $method = $handler['method'];
                 $requestClass = $handler['requestClass'];
 
-                $authService = new SessionAuthenticationService();
-                $cartService = new CartService($authService);
-                $orderService = new OrderService();
+                $container = new Container();
 
-                $obj = new $class($authService, $cartService, $orderService);
+                $container->set(CartController::class, function () {
+                    $authService = new SessionAuthenticationService();
+                    $cartService = new CartService($authService);
+
+                    return new CartController($authService, $cartService);
+                });
+
+                $container->set(MainController::class, function () {
+                    $authService = new SessionAuthenticationService();
+                    $cartService = new CartService($authService);
+                    $productRepository = new ProductRepository();
+
+                    return new MainController($authService, $cartService, $productRepository);
+                });
+
+                $container->set(OrderController::class, function () {
+                    $authService = new SessionAuthenticationService();
+                    $cartService = new CartService($authService);
+                    $orderService = new OrderService();
+                    $userProductRepository = new UserProductRepository();
+
+                    return new OrderController($authService, $cartService, $orderService, $userProductRepository);
+                });
+
+                $container->set(UserController::class, function () {
+                    $authService = new SessionAuthenticationService();
+                    $userRepository = new UserRepository();
+
+                    return new UserController($authService, $userRepository);
+                });
+
+                $obj = $container->get($class);
 
                 $request = new $requestClass($method, $requestUri, headers_list(), $_POST);
                 $obj->$method($request);

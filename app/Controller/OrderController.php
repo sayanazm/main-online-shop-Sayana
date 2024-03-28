@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use Entity\User;
 use Repository\UserProductRepository;
 use Request\OrderRequest;
 use Service\AuthenticationService\AuthenticationServiceInterface;
@@ -18,12 +19,12 @@ class OrderController
     private  AuthenticationServiceInterface $authenticationService;
 
 
-    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService, OrderService $orderService)
+    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService, OrderService $orderService, UserProductRepository $userProductRepository)
     {
         $this->authenticationService = $authenticationService;
         $this->cartService = $cartService;
         $this->orderService = $orderService;
-        $this->userProductRepository = new UserProductRepository;
+        $this->userProductRepository = $userProductRepository;
     }
     public function getOrderForm(): void
     {

@@ -13,11 +13,11 @@ class MainController
     private CartService $cartService;
     private AuthenticationServiceInterface $authenticationService;
 
-    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService)
+    public function __construct(AuthenticationServiceInterface $authenticationService, CartService $cartService, ProductRepository $productRepository)
     {
         $this->authenticationService = $authenticationService;
         $this->cartService = $cartService;
-        $this->productRepository = new ProductRepository;
+        $this->productRepository = $productRepository;
     }
     public function getProducts() :void
     {
