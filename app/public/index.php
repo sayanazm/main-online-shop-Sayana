@@ -6,6 +6,7 @@ use Controller\OrderController;
 use Controller\UserController;
 use Core\App;
 use Core\Autoloader;
+use Core\Container;
 use Request\CartRequest;
 use Request\LoginRequest;
 use Request\OrderRequest;
@@ -15,7 +16,11 @@ require_once './../Core/Autoloader.php';
 
 Autoloader::registrate(dirname(__DIR__));
 
-$app = new App();
+$services = include './../Config/services.php';
+
+$container = new Container($services);
+
+$app = new App($container);
 
 $app->get('/registrate',  UserController::class, 'getRegistrationForm');
 $app->post('/registrate', UserController::class, 'registrate', RegistrationRequest::class);

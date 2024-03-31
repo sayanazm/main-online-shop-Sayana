@@ -1,0 +1,12 @@
+ERROR:
+date: 2024/03/31 12:51:30
+message: Call to undefined function Repository\etenv()
+file: /var/www/html/app/Repository/Repository.php
+line: 19
+
+ERROR: 
+date: 2024/03/31 12:51:42
+message: Call to undefined function Repository\etenv()
+file: /var/www/html/app/Repository/Repository.php
+line: 19
+
