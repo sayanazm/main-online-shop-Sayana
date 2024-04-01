@@ -2,8 +2,8 @@
 
 namespace Request;
 
+use Core\Request;
 use Repository\UserRepository;
-use Request\Request;
 
 class RegistrationRequest extends Request
 {

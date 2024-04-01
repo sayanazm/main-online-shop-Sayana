@@ -2,6 +2,7 @@
 
 namespace Request;
 
+use Core\Request;
 use Repository\UserProductRepository;
 
 class CartRequest extends Request

@@ -2,8 +2,8 @@
 
 namespace Repository;
 
+use Core\Repository;
 use Entity\User;
-use Repository\Repository;
 
 class UserRepository extends Repository
 {

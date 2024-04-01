@@ -2,8 +2,8 @@
 
 namespace Repository;
 
+use Core\Repository;
 use Entity\Order;
-use Repository\Repository;
 
 class OrderRepository extends Repository
 {

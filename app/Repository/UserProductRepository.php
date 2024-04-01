@@ -2,10 +2,10 @@
 
 namespace Repository;
 
+use Core\Repository;
 use Entity\Product;
 use Entity\User;
 use Entity\UserProduct;
-use Repository\Repository;
 
 class UserProductRepository extends Repository
 {

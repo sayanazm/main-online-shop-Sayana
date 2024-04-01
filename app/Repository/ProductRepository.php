@@ -2,8 +2,8 @@
 
 namespace Repository;
 
+use Core\Repository;
 use Entity\Product;
-use Repository\Repository;
 
 class ProductRepository extends Repository
 {

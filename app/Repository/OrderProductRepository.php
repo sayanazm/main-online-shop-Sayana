@@ -2,6 +2,8 @@
 
 namespace Repository;
 
+use Core\Repository;
+
 class OrderProductRepository extends Repository
 {
     public function addFromUserProducts($userId, $orderId): null|array

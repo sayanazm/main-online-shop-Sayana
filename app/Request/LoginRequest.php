@@ -2,6 +2,7 @@
 
 namespace Request;
 
+use Core\Request;
 use Repository\UserRepository;
 
 class LoginRequest extends Request

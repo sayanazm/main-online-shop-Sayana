@@ -2,9 +2,9 @@
 
 namespace Request;
 
+use Core\Request;
 use Repository\UserProductRepository;
 use Repository\UserRepository;
-use Request\Request;
 
 class OrderRequest extends Request
 {

@@ -6,7 +6,7 @@ use Controller\OrderController;
 use Controller\UserController;
 use Core\Container;
 use Core\Logger;
-use Core\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use Repository\OrderProductRepository;
 use Repository\OrderRepository;
 use Repository\ProductRepository;
