@@ -1,0 +1,5 @@
+{
+    "require": {
+        "sayana/my-library": "^1.0"
+    }
+}

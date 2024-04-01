@@ -1,0 +1,23 @@
+{
+    "name": "sayana/my-library",
+    "type": "library",
+    "require": {
+        "php": "^8.1",
+        "psr/log": "^3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Sayana\\MyLibrary\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "sayanazm",
+            "email": "kkit1303@gmail.com"
+        }
+    ]
+}

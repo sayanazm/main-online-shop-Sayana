@@ -1,0 +1,2 @@
+An library with the Core directory including classes:
+App, Autoloader, Container, Repository, Request and Logger from psr/log.
