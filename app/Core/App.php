@@ -83,9 +83,9 @@ class App
                 'line' => 'line: ' . $exception->getLine(),
             ];
 
-            $logger->error('ERROR: ', $data);
+            $logger->error('The server cannot process the request: ', $data);
 
-            require_once '../View/not_found.html';
+            require_once '../View/500.html';
         }
 
     }
