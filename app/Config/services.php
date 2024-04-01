@@ -5,6 +5,8 @@ use Controller\MainController;
 use Controller\OrderController;
 use Controller\UserController;
 use Core\Container;
+use Core\Logger;
+use Core\LoggerInterface;
 use Repository\OrderProductRepository;
 use Repository\OrderRepository;
 use Repository\ProductRepository;
@@ -20,6 +22,11 @@ return [
         $userRepository = $container->get(UserRepository::class);
 
         return new SessionAuthenticationService($userRepository);
+    },
+
+    LoggerInterface::class => function () {
+
+        return new Logger();
     },
 
     OrderService::class => function (Container $container) {

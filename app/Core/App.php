@@ -75,7 +75,7 @@ class App
             }
         } catch (\Throwable $exception) {
 
-            $logger = $this->container->get(Logger::class);
+            $logger = $this->container->get(LoggerInterface::class);
 
             $data = [
                 'message' => 'message: ' . $exception->getMessage(),

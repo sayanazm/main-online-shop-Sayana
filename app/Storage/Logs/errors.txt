@@ -10,3 +10,9 @@ message: Call to undefined function Repository\etenv()
 file: /var/www/html/app/Repository/Repository.php
 line: 19
 
+ERROR: 
+date: 2024/04/01 05:54:06
+message: Call to a member function getOneByProductId() on null
+file: /var/www/html/app/Service/CartService.php
+line: 29
+
